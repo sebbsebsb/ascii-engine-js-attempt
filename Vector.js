@@ -22,10 +22,19 @@ export default class Vector {
   update(v) {
     this.x = v.x;
     this.y = v.y;
+    return this;
   }
   
   toString() {
     return `${this.x},${this.y}`;
+  }
+  
+  // checks collision and moves if possible
+  static tryMove(current, dx, dy, colMap) {
+    const v = new Vector().update(current).add(dx, dy);
+    if (!colMap.has(v.toString())) {
+        current.update(v);
+    }
   }
 }
   

@@ -79,9 +79,6 @@ function load() {
 
 
 
-
-
-
 ///////////////////////////////////////////////////DRAW FUNCTIONS
 function draw() {
     if (gameState === 'game') {
@@ -152,113 +149,103 @@ function chooseChar(x, y) {
     // render character
     if (glob.x === x && glob.y === y) return 'ii';
     
+    // render map
     const key = `${x},${y}`;
     if (world.has(key)) {
         return world.get(key);
     }
     
-    
     return '  '; // default return
 }
 
 
-// this updates the display every time a key is pressed
-// also moves the coords accordingly
-document.addEventListener('keydown', e => {
-    console.log(e.key); // to check what key's pressed
-    
-    // make new vector and set it to the same coords as glob
-    const v = new Vector();
-    v.update(glob);
-    switch (gameState) {
-        
-        ////// IN GAME WORLD
-        case 'game':
-            switch (e.key) {
-        
-                //////// MOVEMENT
-                
-                // MOVE UP
-                case 'w':
-                case 'ArrowUp':
-                    move(v.add(0,1));
-                    break;
-                    
-                // MOVE LEFT
-                case 'a':
-                case 'ArrowLeft':
-                    move(v.add(-1,0));
-                    break;
-                    
-                // MOVE DOWN
-                case 's':
-                case 'ArrowDown':
-                    move(v.add(0,-1));
-                    break;
-                    
-                // MOVE RIGHT
-                case 'd':
-                case 'ArrowRight':
-                    move(v.add(1,0));
-                    break;
-                    
-                
-                ////// ESCAPE
-                case 'Escape':
-                    gameState = 'mainMenu';
-                    break;
-                    
-                    
-                // UNREGISTERED KEYPRESS
-                default:
-                    // console.log('error in keydown 'game' event listener');
-                    break;
-            }
-            break;
-            
-        ////// IN MENU
-        case 'mainMenu':
-            switch(e.key) {
-                // MOVE UP IN MENU
-                case 'w':
-                case 'ArrowUp':
-                    mainMenu.navigate(-1);
-                    break;
-                        
-                // MOVE DOWN IN MENU
-                case 's':
-                case 'ArrowDown':
-                    mainMenu.navigate(1);
-                    break;
-                        
-                // SELECT
-                case 'Enter':
-                case ' ':
-                    // FIXME select menu option
-                    mainMenu.select();
-                    break;
-                    
-                // ESCAPE
-                case 'Escape':
-                    gameState = 'game';
-                    break;
-                    
-                    
-                // UNREGISTERED KEYPRESS
-                default:
-                    // console.log('error in keydown 'menu' event listener');
-                    break;
-            }    
-            break;
-            
-    }
-    
-    draw();
-});
 
-// takes a vector and checks collision on that vector
-function move(v) {
-    if (!colMap.has(v.toString())) glob.update(v);
+
+
+
+//////////////////////////////////////////////////////KEY HANDLER
+
+document.addEventListener('keydown', e => handleKey(e.key));
+
+function handleKey(key) {
+    if (gameState === 'game') handleGameInput(key);
+    else if (gameState === 'mainMenu') handleMainMenuInput(key);
+    draw();
+}
+function handleGameInput(key) {
+    switch (key) {
+        //////// MOVEMENT
+        
+        // MOVE UP
+        case 'w':
+        case 'ArrowUp':
+            Vector.tryMove(glob, 0, 1, colMap);
+            break;
+            
+        // MOVE LEFT
+        case 'a':
+        case 'ArrowLeft':
+            Vector.tryMove(glob, -1, 0, colMap);
+            break;
+            
+        // MOVE DOWN
+        case 's':
+        case 'ArrowDown':
+            Vector.tryMove(glob, 0, -1, colMap);
+            break;
+            
+        // MOVE RIGHT
+        case 'd':
+        case 'ArrowRight':
+            Vector.tryMove(glob, 1, 0, colMap);
+            break;
+            
+        
+        ////// ESCAPE
+        case 'Escape':
+            gameState = 'mainMenu';
+            break;
+            
+            
+        // UNREGISTERED KEYPRESS
+        default:
+            // console.log('error in keydown 'game' event listener');
+            break;    
+    }
+}
+function handleMainMenuInput(key) {
+    ////// IN MENU
+    switch(key) {
+        // MOVE UP IN MENU
+        case 'w':
+        case 'ArrowUp':
+            mainMenu.navigate(-1);
+            break;
+                
+        // MOVE DOWN IN MENU
+        case 's':
+        case 'ArrowDown':
+            mainMenu.navigate(1);
+            break;
+                
+        // SELECT
+        case 'Enter':
+        case ' ':
+            // FIXME select menu option
+            mainMenu.select();
+            break;
+            
+        // ESCAPE
+        case 'Escape':
+            gameState = 'game';
+            break;
+            
+            
+        // UNREGISTERED KEYPRESS
+        default:
+            // console.log('error in keydown 'menu' event listener');
+            break;
+    }    
 }
 
 
