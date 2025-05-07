@@ -1,4 +1,4 @@
-import { sym } from './utils.js';
+import { sym, txt } from './utils.js';
 
 
 
@@ -13,7 +13,10 @@ export default class Renderer {
     toggle, 
     glob, 
     entityHandler, 
-    inventory
+    inventory,
+    effects,
+    items,
+    player
   }) {
     this.SIZE = SIZE;
     this.world = world;
@@ -23,6 +26,9 @@ export default class Renderer {
     this.glob = glob;
     this.entityHandler = entityHandler;
     this.inventory = inventory;
+    this.effects = effects;
+    this.items = items;
+    this.player = player;
   }
   
   draw(gameState, coords) {
@@ -56,7 +62,21 @@ export default class Renderer {
     document.getElementById('grid').textContent = output;
   }
   topHUD() { // add stuff here to display above viewport
-    return ' ' + sym('\u2550', this.SIZE * 2) + ' \n';
+    let output = '';
+    if (this.toggle.gameState !== 'game') return output;
+    
+    output += txt('HEALTH', '\u2550', this.SIZE);
+    
+    let input = ''
+    for (let i = 0; i < (this.player.health / this.player.maxHealth) * this.SIZE * 2; i++) {
+      input += '\u2593';
+    }
+    
+    output += txt(input, '\u2591', this.SIZE);
+    
+    
+    
+    return output;
   }
   bottomHUD(coords) { // add stuff here to display below viewport
     let output = ' ' + sym('\u2550', this.SIZE * 2) + ' \n'; // bottom bar
@@ -73,10 +93,10 @@ export default class Renderer {
     return output;
   }
   leftHUD() {
-    return '\u2551';
+    return '';
   }
   rightHUD() {
-    return '\u2551';
+    return '';
   }
   
   // passing coords here for debug mode
@@ -104,6 +124,12 @@ export default class Renderer {
   
   
   chooseChar(x, y, coords) {
+    const key = `${x},${y}`;
+    
+    // render visuals
+    if (this.effects.has(key)) {
+      return this.effects.get(key).text;
+    }
     
     // render player
     if (this.glob.x === x && this.glob.y === y) {
@@ -112,17 +138,30 @@ export default class Renderer {
       return '++';
     } 
     
+    
+    
+    // add 'BANG' when a shot is fired
+    // then add exposion noise around the player
+    
+    
     // Check if there is an entity at this location
     const entityAtCoords = this.entityHandler.entities.find(entity => entity.loc.x === x && entity.loc.y === y);
     if (entityAtCoords) {
       return entityAtCoords.render(); // Render entity
     }
     
+    // render items
+    if (this.items.has(key)) {
+      return this.items.get(key);
+    }
+    
+    
     // render map
-    const key = `${x},${y}`;
     if (this.world.has(key)) {
         return this.world.get(key);
     }
+    
+    
     
     return '  '; // default return
   }

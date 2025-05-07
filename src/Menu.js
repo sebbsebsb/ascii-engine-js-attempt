@@ -16,7 +16,7 @@ export default class Menu {
 
   render(SIZE) {
       let output = '';
-      output += txt(this.title, '\u2551', SIZE);
+      output += txt(this.title, '\u2550', SIZE);
       for (let i = 0; i < this.options.length; i++) {
           const char = (i === this.selected) ? '\u2550' : ' '; // if it's selected put thingies around it
           output += txt(this.options[i], char, SIZE);

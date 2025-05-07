@@ -10,4 +10,11 @@ export default class Player{
   unequip() {
     this.objectEquipped = null;
   }
+  hurt(amount) {
+    this.health -= amount;
+    if (this.health <= 0) {
+      this.health = 0;
+      // game over or something
+    }
+  }
 }

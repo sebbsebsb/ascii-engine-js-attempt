@@ -10,6 +10,7 @@ export default class AudioManager {
       new Audio('./Sounds/footstepSound5.mp3')
     ];
     this.footstepSounds.forEach(sound => sound.volume = 0.3);
+    
     this.gunshotSounds9mm = [
       new Audio('./Sounds/gunshotSound9mm1.mp3'),
       new Audio('./Sounds/gunshotSound9mm2.mp3'),
@@ -17,6 +18,15 @@ export default class AudioManager {
       new Audio('./Sounds/gunshotSound9mm4.mp3'),
     ];
     this.gunshotSounds9mm.forEach(sound => sound.volume = 0.5);
+    
+    this.ejectSounds9mm = [
+      new Audio('./Sounds/ejectSound9mm1.mp3'),
+      new Audio('./Sounds/ejectSound9mm2.mp3'),
+      new Audio('./Sounds/ejectSound9mm3.mp3'),
+      new Audio('./Sounds/ejectSound9mm4.mp3'),
+    ];
+    this.ejectSounds9mm.forEach(sound => sound.volume = 0.5);
+    
   }
   
   play(soundName) {
@@ -47,9 +57,26 @@ export default class AudioManager {
         break;
     }
   }
+  playEject(gunType) {
+    switch (gunType) {
+      case '9mm':
+        this.play9mmEject();
+        break;
+      
+      default:
+        console.warn('unknown gun type');
+        break;
+    }
+  }
   play9mmGunshot() {
     const index = getRand(0, this.gunshotSounds9mm.length - 1);
     const sound = this.gunshotSounds9mm[index];
+    sound.currentTime = 0;
+    sound.play();
+  }
+  play9mmEject() {
+    const index = getRand(0, this.ejectSounds9mm.length - 1);
+    const sound = this.ejectSounds9mm[index];
     sound.currentTime = 0;
     sound.play();
   }

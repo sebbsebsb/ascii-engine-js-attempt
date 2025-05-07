@@ -1,8 +1,8 @@
 import Entity from "./Entity.js";
 
 export default class Zombie extends Entity {
-  constructor(maxHealth, loc, colMap, glob, health) {
-    super(maxHealth, loc, colMap, health);
+  constructor(maxHealth, loc, colMap, glob, damage, health) {
+    super(maxHealth, loc, colMap, damage, health);
     this.glob = glob;
   }
   render() {
@@ -25,4 +25,5 @@ export default class Zombie extends Entity {
         
     }
   }
+  
 }

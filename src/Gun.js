@@ -25,10 +25,16 @@ export default class Gun extends InventoryItem{
     if (this.clip && this.bulletInChamber) {
       this.bulletInChamber = false;
       this.audio.playGunshot(this.clipType);
-      output = true;
+      output = true; // gun fired a shot
+      
+      // did it hit>
+      
+      
       if (this.clip.loadBullet()) {
-        this.bulletInChamber = true;
+        this.bulletInChamber = true; // gun has another bullet in the chamber
       }
+      
+      
     }
     return output;
   }
@@ -38,6 +44,7 @@ export default class Gun extends InventoryItem{
     if (this.clip){
       if (this.clip.loadBullet()) {
         this.bulletInChamber = true;
+        this.audio.playEject(this.clipType);
         return true;
       }
     }

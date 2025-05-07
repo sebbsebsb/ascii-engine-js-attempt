@@ -44,6 +44,14 @@ export default class Vector {
     return false
   }
   
+  equals(vector) {
+    if (this.x === vector.x && this.y === vector.y) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   // gets the distance between this and v vectors, returns it as a vector
   distance(v) {
     const distance = new Vector();
@@ -131,5 +139,43 @@ export default class Vector {
     
     return new Vector(rand.x, rand.y);
   }
+  
+  // returns a ray between this and vector
+  getLineVectors(vector) {
+    const start = new Vector().update(this);
+    const end = new Vector().update(vector);
+    start.minMax(end);
+    
+    
+    const points = [];
+  
+    let x0 = start.x;
+    let y0 = start.y;
+    const x1 = end.x;
+    const y1 = end.y;
+  
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+  
+    while (true) {
+      points.push(new Vector(x0, y0));
+      if (x0 === x1 && y0 === y1) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x0 += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y0 += sy;
+      }
+    }
+  
+    return points;
+  }
+  
 }
   

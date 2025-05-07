@@ -14,7 +14,9 @@ export default class KeyHandler {
     audio, 
     entityHandler, 
     inventory, 
-    player
+    player,
+    effects,
+    combatVisuals
   }) {
     this.glob = glob;
     this.FCglob = FCglob;
@@ -26,6 +28,8 @@ export default class KeyHandler {
     this.entityHandler = entityHandler;
     this.inventory = inventory;
     this.player = player;
+    this.effects = effects;
+    this.combatVisuals = combatVisuals;
   }
   
   
@@ -70,11 +74,19 @@ export default class KeyHandler {
     this.handleBasics(key, this.glob, this.colMap);
     switch (key) {
       case 'F':
-        console.log(this.player.objectEquipped.fire());
+        if (this.player.objectEquipped.fire()) {
+          this.combatVisuals.bang();
+          const entityShot = this.entityHandler.shootNearestEntity(this.glob, this.player.objectEquipped);
+          this.combatVisuals.shootEntityVisuals(entityShot);
+        } else {
+          this.combatVisuals.click();
+        }
         break;
         
       case 'E':
-        console.log(this.player.objectEquipped.eject());
+        if (this.player.objectEquipped.eject()) {
+          this.combatVisuals.eject();
+        }
         break;
       
       ////// ESCAPE
