@@ -1,4 +1,4 @@
-import { getRand, txt, sym } from './utils.js';
+import { txt } from './utils.js';
 
 export default class Menu {
   constructor(title, options, onSelect) {
@@ -25,7 +25,7 @@ export default class Menu {
   }
 
   select() {
-      const action = this.options[this.selected];
-      if (this.onSelect) this.onSelect(action);
+    const action = this.options[this.selected];
+    if (this.onSelect) this.onSelect(action);
   }
 }
