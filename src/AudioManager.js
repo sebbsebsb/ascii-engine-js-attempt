@@ -27,12 +27,31 @@ export default class AudioManager {
     ];
     this.ejectSounds9mm.forEach(sound => sound.volume = 0.5);
     
+    this.clickSound9mm = new Audio('./Sounds/click9mm1.mp3');
+    this.clickSound9mm.volume = 0.3;
+    
+    this.menuSelect = new Audio('./Sounds/click4.mp3');
+    this.menuSelect.volume = 1;
+    
+    this.menuMove = new Audio('./Sounds/click5.mp3');
+    this.menuMove.volume = 0.4;
+    
   }
   
   play(soundName) {
     switch (soundName) {
       case 'footstep':
         this.playFootstep();
+        break;
+        
+      case 'menuSelect':
+        this.menuSelect.currentTime = 0;
+        this.menuSelect.play();
+        break;
+      
+      case 'menuMove':
+        this.menuMove.currentTime = 0;
+        this.menuMove.play();
         break;
         
       default:
@@ -68,6 +87,17 @@ export default class AudioManager {
         break;
     }
   }
+  playClick(gunType) {
+    switch (gunType) {
+      case '9mm':
+        this.play9mmClick();
+        break;
+      
+      default:
+        console.warn('unknown gun type');
+        break;
+    }
+  }
   play9mmGunshot() {
     const index = getRand(0, this.gunshotSounds9mm.length - 1);
     const sound = this.gunshotSounds9mm[index];
@@ -79,5 +109,9 @@ export default class AudioManager {
     const sound = this.ejectSounds9mm[index];
     sound.currentTime = 0;
     sound.play();
+  }
+  play9mmClick() {
+    this.clickSound9mm.currentTime = 0;
+    this.clickSound9mm.play();
   }
 }

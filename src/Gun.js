@@ -27,14 +27,11 @@ export default class Gun extends InventoryItem{
       this.audio.playGunshot(this.clipType);
       output = true; // gun fired a shot
       
-      // did it hit>
-      
-      
       if (this.clip.loadBullet()) {
         this.bulletInChamber = true; // gun has another bullet in the chamber
       }
-      
-      
+    } else {
+      this.audio.playClick(this.clipType);
     }
     return output;
   }

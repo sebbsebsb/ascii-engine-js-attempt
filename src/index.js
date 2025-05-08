@@ -91,10 +91,10 @@ function initSecondaries() {
   const mainMenu = new Menu('MAIN MENU', ['SAVE', 'LOAD'], (action) => { 
     if (action === 'SAVE') storage.save();
     else if (action === 'LOAD') storage.load();
-  });
+  }, audio);
   
   const invArr = []; // inv array
-  const inventory = new Inventory(invArr); // inv object
+  const inventory = new Inventory(invArr, audio); // inv object
 
   const builder = new WorldBuilder(world, colMap, WORLDMAPSIZE);
   const loader = new MapLoader(builder);
