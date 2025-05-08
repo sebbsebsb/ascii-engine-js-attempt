@@ -6,6 +6,8 @@ export default class Toggles {
     this.freeCam = false;
     this.pause = false;
     this.superSpeed = false;
+    this.currentMenu = null;
+    this.flash = false;
     this.effects = effects;
   };
   

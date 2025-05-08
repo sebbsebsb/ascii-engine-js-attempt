@@ -1,9 +1,10 @@
 export default class EntityHandler{
-  constructor(entities, items, glob, player) {
+  constructor(entities, items, glob, player, combatVisuals) {
     this.entities = entities || [];
     this.items = items;
     this.glob = glob;
     this.player = player;
+    this.combatVisuals = combatVisuals;
   }
   // updates all entities
   update() {
@@ -16,7 +17,6 @@ export default class EntityHandler{
         this.entities[i].decideMove();
         if(this.glob.equals(this.entities[i].loc)) {
           this.player.hurt(this.entities[i].damage);
-          console.log('test');
         }
       }
     }
@@ -47,8 +47,12 @@ export default class EntityHandler{
     }
     if (minDist <= gun.range) {
       nearest.health -= gun.damage;
+      this.combatVisuals.shootEntityVisuals(nearest);
       console.log(nearest.health);
+      return nearest;
+    } else {
+      this.combatVisuals.shootEntityVisuals();
+      return null;
     }
-    return nearest;
   }
 }

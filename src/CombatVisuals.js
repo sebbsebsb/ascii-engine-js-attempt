@@ -9,31 +9,37 @@ export default class CombatVisuals {
   
   
   
-  shootEntityVisuals(entityShot) {
+  shootEntityVisuals(entityShot = null) {
     this.smoke();
     if (entityShot) {
-      for (let i = 1; i < 10; i++) {
+      // line from player to entity
+      // the target should change with the distance tbh
+      for (let i = 1; i < this.glob.distAvg(entityShot.loc); i++) {
         const vector = new Vector().update(this.getRandomFromLine(entityShot));
         this.effects.set(vector.toString(), {text: this.getRandomBlock(), ticksRemaining: Math.ceil(Math.random() * 10)});
       }
-
+      // little smoke cirlce around entity
+      this.smoke(5, entityShot.loc);
+      this.hit();
     }
+    this.bang();
+    return entityShot;
   }
   
   
   
   
-  smoke() {
+  smoke(radius = 10, target = this.glob) {
     // smoke visual
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < radius; i++) {
       const vector = new Vector();
-      vector.update(this.getRandomCircle(i));
+      vector.update(this.getRandomCircle(i, target));
       
       this.effects.set(vector.toString(), {text: this.getRandomBlock(), ticksRemaining: Math.ceil(Math.random() * 10)})
     }
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < radius / 2; i++) {
       const vector = new Vector();
-      vector.update(this.getRandomCircle(i));
+      vector.update(this.getRandomCircle(i, target));
       
       this.effects.set(vector.toString(), {text: this.getRandomBlock(), ticksRemaining: Math.ceil(Math.random() * 12)})
     }
@@ -44,6 +50,13 @@ export default class CombatVisuals {
     
     this.effects.set(vector.toString(), { text: 'BA', ticksRemaining: 2 });
     this.effects.set(vector.add(1,0).toString(), { text: 'NG', ticksRemaining: 2 });
+  }
+  hit() {
+    // 'BANG' visual
+    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
+    
+    this.effects.set(vector.toString(), { text: 'HI', ticksRemaining: 2 });
+    this.effects.set(vector.add(1,0).toString(), { text: 'T!', ticksRemaining: 2 });
   }
   click() {
     // 'CLICK' visual
@@ -62,14 +75,14 @@ export default class CombatVisuals {
     this.effects.set(vector.add(1,0).toString(), { text: 'T ', ticksRemaining: 2 });
   }
 
-  getRandomCircle(range) {
+  getRandomCircle(range, target = this.glob) {
     const angle = Math.random() * 2 * Math.PI;
     const radius = Math.sqrt(Math.random()) * range;
     
     const dx = Math.round(Math.cos(angle) * radius);
     const dy = Math.round(Math.sin(angle) * radius);
     
-    const vector = new Vector().update(this.glob).add(dx, dy);
+    const vector = new Vector().update(target).add(dx, dy);
     return vector;
   }
   getRandomBlock() {

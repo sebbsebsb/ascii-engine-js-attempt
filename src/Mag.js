@@ -1,8 +1,9 @@
 import InventoryItem from "./InventoryItem.js";
 
-export default class Clip extends InventoryItem{
-  constructor(name, invArr, type, maxBullets, bulletsLeft) {
-    super(name, invArr);
+export default class Mag extends InventoryItem{
+  constructor(invArr, player, type, maxBullets, bulletsLeft) {
+    super(invArr, player);
+    this.invArr = invArr;
     this.type = type;
     this.maxBullets = maxBullets;
     this.bulletsLeft = bulletsLeft || maxBullets;
@@ -20,8 +21,7 @@ export default class Clip extends InventoryItem{
   }
   toString() {
     let output = '';
-    output += this.name + ' Clip class\n';
-    output += `type:${this.type} maxBullets:${this.maxBullets} bulletsLeft:${this.bulletsLeft}`;
+    output += `${this.type} MAG ${this.bulletsLeft}/${this.maxBullets}`;
     return output;
   }
 }

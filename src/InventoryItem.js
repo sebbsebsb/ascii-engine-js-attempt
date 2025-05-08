@@ -1,6 +1,5 @@
 export default class InventoryItem{
-  constructor(name, invArr, player) {
-    this.name = name;
+  constructor(invArr, player) {
     this.invArr = invArr;
     this.invArr.push(this);
     this.player = player;

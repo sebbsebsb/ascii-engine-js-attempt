@@ -144,7 +144,6 @@ export default class Vector {
   getLineVectors(vector) {
     const start = new Vector().update(this);
     const end = new Vector().update(vector);
-    start.minMax(end);
     
     
     const points = [];

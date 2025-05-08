@@ -33,23 +33,39 @@ export default class KeyHandler {
   }
   
   
+  // i want to combine all the menus together
+  
   handleKey(key) {
     // this is the only place where tick is updated
     this.toggle.update();
     
     
-    // console.log(key);
-    
-    if (this.toggle.gameState === 'game' && this.toggle.freeCam) this.handleFreeCamInput(key);
-    else if (this.toggle.gameState === 'game') this.handleGameInput(key);
-    else if (this.toggle.gameState === 'mainMenu') this.handleMainMenuInput(key);
-    else if (this.toggle.gameState === 'inventory') this.handleInvInput(key);
-    
+    const gameState = this.toggle.gameState;
+    if (gameState === 'game') {
+      this.toggle.pause = false;
+      
+      if (this.toggle.freeCam) {
+        this.handleFreeCamInput(key)
+      } else {
+        this.handleGameInput(key);
+      }
+      
+    } else if (gameState === 'mainMenu') {
+      this.toggle.pause = true;
+      
+      this.handleMenuInput(key);
+    } else if (gameState === 'inventory') {
+      this.toggle.pause = false;
+      
+      this.handleMenuInput(key);
+    } else if (gameState === 'inventory sub-menu') {
+      this.handleMenuInput(key);
+    }
     
     // im sending it because it doesnt need to be changed in renderer
-    let coords = new Vector();
+    const coords = new Vector();
     // use freecam coords or use global coords depending on if freecam is on
-    coords = this.toggle.freeCam ? coords.update(this.FCglob) : coords.update(this.glob);
+    this.toggle.freeCam ? coords.update(this.FCglob) : coords.update(this.glob);
     
     // update entities
     this.entityHandler.update();
@@ -75,9 +91,11 @@ export default class KeyHandler {
     switch (key) {
       case 'F':
         if (this.player.objectEquipped.fire()) {
-          this.combatVisuals.bang();
-          const entityShot = this.entityHandler.shootNearestEntity(this.glob, this.player.objectEquipped);
-          this.combatVisuals.shootEntityVisuals(entityShot);
+          if (this.entityHandler.shootNearestEntity(this.glob, this.player.objectEquipped)) {
+            for (let i = 0; i < 1000; i++) {
+              this.toggle.flash = true;
+            }
+          } 
         } else {
           this.combatVisuals.click();
         }
@@ -111,31 +129,35 @@ export default class KeyHandler {
         break;    
     }
   }
-  handleMainMenuInput(key) {
-    this.toggle.pause = true;
+  handleMenuInput(key) {
     ////// IN MENU
     switch(key) {
       // MOVE UP IN MENU
       case 'w':
       case 'ArrowUp':
-        this.mainMenu.navigate(-1);
+        this.toggle.currentMenu.navigate(-1);
         break;
               
       // MOVE DOWN IN MENU
       case 's':
       case 'ArrowDown':
-        this.mainMenu.navigate(1);
+        this.toggle.currentMenu.navigate(1);
         break;
               
       // SELECT
       case 'Enter':
       case ' ':
-        this.mainMenu.select();
+        this.toggle.currentMenu.select();
         break;
           
       // ESCAPE
       case 'Escape':
-        this.toggle.gameState = 'game';
+      case 'e':
+        if (this.toggle.gameState === 'inventory sub-menu') {
+          this.toggle.gameState = 'inventory';
+        } else {
+          this.toggle.gameState = 'game';
+        }
         this.toggle.pause = false;
         break;
           
@@ -145,40 +167,6 @@ export default class KeyHandler {
         // console.log('error in keydown 'menu' event listener');
         break;
     }    
-  }
-  handleInvInput(key) {
-    ////// IN INVENTORY
-    switch(key) {
-      // MOVE UP IN MENU
-      case 'w':
-      case 'ArrowUp':
-        this.inventory.menu.navigate(-1);
-        break;
-              
-      // MOVE DOWN IN MENU
-      case 's':
-      case 'ArrowDown':
-        this.inventory.menu.navigate(1);
-        break;
-              
-      // SELECT
-      case 'Enter':
-      case ' ':
-        this.inventory.menu.select();
-        break;
-          
-      // ESCAPE
-      case 'Escape':
-      case 'e':
-        this.toggle.gameState = 'game';
-        break;
-          
-          
-      // UNREGISTERED KEYPRESS
-      default:
-        // console.log('error in keydown 'menu' event listener');
-        break;
-    }
   }
   handleBasics(key, glob, colMap) {
     this.handleMovement(key, glob, colMap);

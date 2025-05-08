@@ -11,8 +11,7 @@ import Entity from "./Entity.js";
 import EntityHandler from "./EntityHandler.js";
 import Zombie from "./Zombie.js";
 import Inventory from "./Inventory.js";
-import InventoryItem from "./InventoryItem.js";
-import Clip from "./Clip.js";
+import Mag from "./Mag.js";
 import Gun from "./Gun.js";
 import Player from "./Player.js";
 import CombatVisuals from "./CombatVisuals.js";
@@ -22,14 +21,15 @@ import CombatVisuals from "./CombatVisuals.js";
 
 //////////////////////////////////////////////////GLOBAL VARS ETC
 
-const SIZE = 19; // has to be odd
+const SIZE = 29; // has to be odd
 const WORLDMAPSIZE = 500; // this is only used for the populate() function
 
 const {glob, FCglob, world, colMap, audio, storage, effects, toggle, items} = initCore();
-const {player, testEntity, testZombie, entityHandler} = initEntities();
-const {mainMenu, invArr, inventory, builder, loader, renderer, combatVisuals, keyHandler} = initSecondaries();
+const {player, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10} = initEntities();
+const {mainMenu, invArr, inventory, builder, loader, combatVisuals} = initSecond();
+const {renderer, keyHandler, entityHandler} = initThird();
 
-
+const gunConfig = {player, audio, toggle};
 
 
 
@@ -42,23 +42,23 @@ const {mainMenu, invArr, inventory, builder, loader, renderer, combatVisuals, ke
 // //////////////////////////////////////////////////////KEY HANDLER
 document.addEventListener('keydown', e => keyHandler.handleKey(e.key));
 
+
 ///////////////////////////////////////////////////WORLD CREATION
 initWorld(builder);
 
-///////////////////////////////////////////////////////TESTING
+///////////////////////////////////////////////////////ITEMS INIT
 
-// const vec1 = new Vector(-8, 3);
-// const vec2 = new Vector(1, -2);
-// console.log(vec1.distance(vec2).toString());
-// console.log(vec1.distAvg(vec2));
 
-const testClip = new Clip('Test Clip', invArr, player, '9mm', 12);
-console.log(testClip);
+// name, invArr, type, maxBullets, bulletsLeft
+const testMag1 = new Mag(invArr, player, '9mm', 24);
+const testMag2 = new Mag(invArr, player, '9mm', 12);
 
-const testGun = new Gun('Test Gun', invArr, player, audio, 10, 5, '9mm', testClip, false, true);
-console.log(testGun);
+// name, invArr, {player, audio, toggle}, damage, range, magType, mag = null, bulletInChamber = false, equipped = false
+const testGun = new Gun(invArr, gunConfig, 10, 5, '9mm', testMag2, false, true);
 
-console.log(invArr);
+console.log(inventory.getAvailableItems());
+
+
 
 ////////////////////////////////////////////////////FUNCTIONS
 
@@ -85,7 +85,7 @@ function initCore() {
   return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items};
 }
 
-function initSecondaries() {
+function initSecond() {
   
   // main menu class construct
   const mainMenu = new Menu('MAIN MENU', ['SAVE', 'LOAD'], (action) => { 
@@ -104,6 +104,35 @@ function initSecondaries() {
   
   
   
+  
+  return {mainMenu, invArr, inventory, builder, loader, combatVisuals};
+}
+
+function initEntities() {
+  ///////////////////////////////ENTITIES
+  const player = new Player(153, null, 140);
+  const testEntity = new Entity(100, new Vector(3, 3), colMap, 5);
+  
+  const testZombie1 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie2 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie3 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie4 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie5 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie6 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie7 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie8 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie9 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie10 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+
+  
+
+  // entity object used for locations and rendering
+  
+  return {player, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10};
+}
+
+function initThird() {
+  const entityHandler = new EntityHandler([testEntity, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10], items, glob, player, combatVisuals);
   const renderer = new Renderer({
     SIZE, 
     world, 
@@ -131,17 +160,6 @@ function initSecondaries() {
     effects,
     combatVisuals
   }); // key hander
-  return {mainMenu, invArr, inventory, builder, loader, renderer, combatVisuals, keyHandler};
-}
-
-function initEntities() {
-  ///////////////////////////////ENTITIES
-  const player = new Player(153, null, 140);
-  const testEntity = new Entity(100, new Vector(3, 3), colMap, 5);
-  const testZombie = new Zombie(100, new Vector(-10,-10), colMap, glob, 10);
-
-
-  // entity object used for locations and rendering
-  const entityHandler = new EntityHandler([testEntity, testZombie], items, glob, player);
-  return {player, testEntity, testZombie, entityHandler};
+  
+  return {entityHandler, renderer, keyHandler}
 }
