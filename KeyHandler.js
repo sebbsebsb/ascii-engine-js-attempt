@@ -42,7 +42,7 @@ export default class KeyHandler {
     
     const gameState = this.toggle.gameState;
     if (gameState === 'game') {
-      this.toggle.pause = false;
+      // this.toggle.pause = false;
       
       if (this.toggle.freeCam) {
         this.handleFreeCamInput(key)

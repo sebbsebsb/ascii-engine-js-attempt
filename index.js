@@ -15,6 +15,7 @@ import Mag from "./Mag.js";
 import Gun from "./Gun.js";
 import Player from "./Player.js";
 import CombatVisuals from "./CombatVisuals.js";
+import Item from "./Item.js";
 
 
 
@@ -73,14 +74,15 @@ async function initWorld(builder) {
 
 function initCore() {
   const glob = new Vector(); // global coords and where the player is
+  const storage = new Storage(glob); // storage to save and load game
   const FCglob = new Vector(); //freecam coords
   const world = new Map(); // world mapppp
   const colMap = new Map(); // collision mapppppppppppppppppp
   const audio =  new AudioManager(); // audio
-  const storage = new Storage(glob); // storage to save and load game
   const effects = new Map(); // effects map
-  const items = new Map(); // items map
   const toggle = new Toggles(effects); // toggles like freecam and debug mode
+  const items = new Map(); // items map
+  const item = new ItemHandler(items); //item class
   
   return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items};
 }
@@ -113,16 +115,16 @@ function initEntities() {
   const player = new Player(153, null, 140);
   const testEntity = new Entity(100, new Vector(3, 3), colMap, 5);
   
-  const testZombie1 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie2 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie3 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie4 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie5 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie6 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie7 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie8 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie9 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
-  const testZombie10 = new Zombie(10, new Vector(-100,-100), colMap, glob, 10);
+  const testZombie1 = new Zombie(10, new Vector(-10,-10), colMap, glob, 10);
+  const testZombie2 = new Zombie(10, new Vector(10,10), colMap, glob, 10);
+  const testZombie3 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
+  const testZombie4 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
+  const testZombie5 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
+  const testZombie6 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
+  const testZombie7 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
+  const testZombie8 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
+  const testZombie9 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
+  const testZombie10 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
 
   
 

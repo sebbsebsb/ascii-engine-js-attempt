@@ -20,6 +20,7 @@ export default class Zombie extends Entity {
       switch (Math.ceil(Math.random() * 2)) {
         case 1:
           this.randomMove();
+          this.state = 'idle';
           break;
         case 2:
           this.moveTowardLoc(this.glob);
@@ -29,6 +30,7 @@ export default class Zombie extends Entity {
           break;
       }
     } else {
+      this.state = 'idle';
       this.randomMove();
     }
     
