@@ -32,6 +32,8 @@ export default class Toggles {
         this.effects.delete(key);
       }
     }
+    
+    
     return this.tick;
   }
   

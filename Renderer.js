@@ -194,7 +194,7 @@ export default class Renderer {
     
     
     // Check if there is an entity at this location
-    const entityAtCoords = this.entityHandler.entities.find(entity => entity.loc.x === x && entity.loc.y === y);
+    const entityAtCoords = this.entityHandler.entitiesArray.find(entity => entity.loc.x === x && entity.loc.y === y);
     if (entityAtCoords) {
       return entityAtCoords.render(); // Render entity
     }

@@ -26,7 +26,14 @@ export default class CombatVisuals {
     return entityShot;
   }
   
-  
+  reload() {
+    // 'RELOAD' visual
+    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
+    
+    this.effects.set(vector.toString(), { text: 'RE', ticksRemaining: 2 });
+    this.effects.set(vector.add(1,0).toString(), { text: 'LO', ticksRemaining: 2 });
+    this.effects.set(vector.add(1,0).toString(), { text: 'AD', ticksRemaining: 2 });
+  }
   
   
   smoke(radius = 10, target = this.glob) {

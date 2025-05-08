@@ -4,7 +4,7 @@ import Menu from "./Menu.js";
 
 
 export default class Gun extends InventoryItem{
-  constructor(invArr, {player, audio, toggle}, damage, range, magType, mag = null, bulletInChamber = false, equipped = false) {
+  constructor(invArr, {player, audio, toggle}, damage, range, magType, reloadTime, mag = null, bulletInChamber = false, equipped = false) {
     super(invArr, player);
     this.audio = audio;
     this.toggle = toggle;
@@ -15,6 +15,8 @@ export default class Gun extends InventoryItem{
     this.bulletInChamber = bulletInChamber;
     this.equipped = equipped;
     this.player = player;
+    this.reloading = false;
+    this.reloadTime = reloadTime;
     
     if (this.equipped) this.player.equip(this);
     
@@ -104,7 +106,7 @@ export default class Gun extends InventoryItem{
       'SELECT MAG',
       validMags,
       (selectedMag) => {
-        this.mag = selectedMag;
+        this.reload(selectedMag);
         // this.audio.play('reload');
         this.toggle.currentMenu = this.menu;
       },
@@ -114,6 +116,23 @@ export default class Gun extends InventoryItem{
     this.toggle.currentMenu = magMenu;
   }
   getValidMags() {
-    return this.invArr.filter(item => item instanceof Mag && item.type === this.magType && this.mag !== item)
+    return this.invArr.filter(item => item instanceof Mag && item.type === this.magType && this.mag !== item && item.bulletsLeft);
+  }
+  reload(mag = null) {
+    if (mag) {
+      this.mag = mag;
+      this.reloading = true;
+      
+      return true;
+    } else {
+      if (!this.mag.bulletsLeft) {
+          const validMags = this.getValidMags();
+        if (validMags.length) {
+          this.mag = validMags[0];
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
