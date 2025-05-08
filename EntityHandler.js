@@ -1,6 +1,6 @@
 export default class EntityHandler{
-  constructor(entities, items, glob, player, combatVisuals) {
-    this.entities = entities || [];
+  constructor(entitiesArray, items, glob, player, combatVisuals) {
+    this.entitiesArray = entitiesArray || [];
     this.items = items;
     this.glob = glob;
     this.player = player;
@@ -8,15 +8,16 @@ export default class EntityHandler{
   }
   // updates all entities
   update() {
-    for (let i = 0; i < this.entities.length; i++) {
-      if (this.entities[i].health <= 0) {
+    for (let i = this.entitiesArray.length - 1; i >= 0; i--) {
+      const entity = this.entitiesArray[i];
+      if (entity.health <= 0) {
         // dead entity, remove from the array
-        this.items.set(this.entities[i].loc.toString(), 'XX');
-        this.entities.splice(i, 1);
+        this.items.set(entity.loc.toString(), 'XX');
+        this.entitiesArray.splice(i, 1);
       } else {
-        this.entities[i].decideMove();
-        if(this.glob.equals(this.entities[i].loc)) {
-          this.player.hurt(this.entities[i].damage);
+        this.entitiesArray[i].decideMove();
+        if(this.glob.equals(entity.loc)) {
+          this.player.hurt(entity.damage);
         }
       }
     }
@@ -25,7 +26,7 @@ export default class EntityHandler{
   getNearestEntity(target) {
     let nearest = null;
     let minDist = Infinity;
-    for (const entity of this.entities) {
+    for (const entity of this.entitiesArray) {
       const dist = target.loc.distAvg(entity.loc);
       if (dist < minDist) {
         minDist = dist;
@@ -38,7 +39,7 @@ export default class EntityHandler{
   shootNearestEntity(glob, gun) {
     let nearest = null;
     let minDist = Infinity;
-    for (const entity of this.entities) {
+    for (const entity of this.entitiesArray) {
       const dist = glob.distAvg(entity.loc);
       if (dist < minDist) {
         minDist = dist;

@@ -15,7 +15,6 @@ import Mag from "./Mag.js";
 import Gun from "./Gun.js";
 import Player from "./Player.js";
 import CombatVisuals from "./CombatVisuals.js";
-import Item from "./Item.js";
 
 
 
@@ -25,9 +24,12 @@ import Item from "./Item.js";
 const SIZE = 29; // has to be odd
 const WORLDMAPSIZE = 500; // this is only used for the populate() function
 
-const {glob, FCglob, world, colMap, audio, storage, effects, toggle, items} = initCore();
-const {player, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10} = initEntities();
+const {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player} = initCore();
+
+const entitiesArray = initEntities(); // array of entities
+
 const {mainMenu, invArr, inventory, builder, loader, combatVisuals} = initSecond();
+
 const {renderer, keyHandler, entityHandler} = initThird();
 
 const gunConfig = {player, audio, toggle};
@@ -55,9 +57,8 @@ const testMag1 = new Mag(invArr, player, '9mm', 24);
 const testMag2 = new Mag(invArr, player, '9mm', 12);
 
 // name, invArr, {player, audio, toggle}, damage, range, magType, mag = null, bulletInChamber = false, equipped = false
-const testGun = new Gun(invArr, gunConfig, 10, 5, '9mm', testMag2, false, true);
+const testGun = new Gun(invArr, gunConfig, 10, 5, '9mm', 5, testMag2, false, true);
 
-console.log(inventory.getAvailableItems());
 
 
 
@@ -82,9 +83,11 @@ function initCore() {
   const effects = new Map(); // effects map
   const toggle = new Toggles(effects); // toggles like freecam and debug mode
   const items = new Map(); // items map
-  const item = new ItemHandler(items); //item class
   
-  return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items};
+  // Character object
+  const player = new Player(153, null, 140);
+  
+  return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player};
 }
 
 function initSecond() {
@@ -112,29 +115,43 @@ function initSecond() {
 
 function initEntities() {
   ///////////////////////////////ENTITIES
-  const player = new Player(153, null, 140);
-  const testEntity = new Entity(100, new Vector(3, 3), colMap, 5);
   
-  const testZombie1 = new Zombie(10, new Vector(-10,-10), colMap, glob, 10);
-  const testZombie2 = new Zombie(10, new Vector(10,10), colMap, glob, 10);
-  const testZombie3 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
-  const testZombie4 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
-  const testZombie5 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
-  const testZombie6 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
-  const testZombie7 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
-  const testZombie8 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
-  const testZombie9 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
-  const testZombie10 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
+  const entitiesArray = [];
+  
+  entitiesArray.push(new Entity(100, new Vector(3,3), colMap, 5));
+  
+  const zombiePositions = [
+    [-10, -10], [10, 10], [-50, 50], [-50, -50], 
+    [50, 50], [50, -50], [-50, 50], [50, 50], 
+    [50, -50], [-50, -50]
+  ]
+  
+  for (const [x, y] of zombiePositions) {
+    entitiesArray.push(new Zombie(10, new Vector(x, y), colMap, glob, 10));
+  }
+  
+  // const testEntity = new Entity(100, new Vector(3, 3), colMap, 5);
+  
+  // const testZombie1 = new Zombie(10, new Vector(-10,-10), colMap, glob, 10);
+  // const testZombie2 = new Zombie(10, new Vector(10,10), colMap, glob, 10);
+  // const testZombie3 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
+  // const testZombie4 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
+  // const testZombie5 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
+  // const testZombie6 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
+  // const testZombie7 = new Zombie(10, new Vector(-50,50), colMap, glob, 10);
+  // const testZombie8 = new Zombie(10, new Vector(50,50), colMap, glob, 10);
+  // const testZombie9 = new Zombie(10, new Vector(50,-50), colMap, glob, 10);
+  // const testZombie10 = new Zombie(10, new Vector(-50,-50), colMap, glob, 10);
+  
+  
 
   
 
-  // entity object used for locations and rendering
-  
-  return {player, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10};
+  return entitiesArray;
 }
 
 function initThird() {
-  const entityHandler = new EntityHandler([testEntity, testEntity, testZombie1, testZombie2, testZombie3, testZombie4, testZombie5, testZombie6, testZombie7, testZombie8, testZombie9, testZombie10], items, glob, player, combatVisuals);
+  const entityHandler = new EntityHandler(entitiesArray, items, glob, player, combatVisuals);
   const renderer = new Renderer({
     SIZE, 
     world, 

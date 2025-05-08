@@ -6,6 +6,5 @@ esc: open menu
 e: open invetnory
 
 1: debug mode
-2: freecam
-3: pause (broken right now)
+v: freecam
 4: super speed

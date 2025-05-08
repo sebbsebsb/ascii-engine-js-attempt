@@ -76,7 +76,7 @@ export default class KeyHandler {
     this.handleBasics(key, this.FCglob);
     switch (key) {
           
-      case '2':
+      case 'v':
         this.toggle.freeCam = false;
         break;
           
@@ -88,7 +88,36 @@ export default class KeyHandler {
   }
   handleGameInput(key) {
     this.handleBasics(key, this.glob, this.colMap);
+    if (this.player.objectEquipped) {
+      this.handleGun(key);
+    }
     switch (key) {
+      
+        
+      ////// ESCAPE
+      case 'Escape':
+        this.toggle.gameState = 'mainMenu';
+        break;
+        
+      case 'e':
+        this.toggle.gameState = 'inventory';
+        break;
+          
+      ////// FREECAM
+      case 'v':
+        this.toggle.freeCam = true;
+        this.FCglob.update(this.glob);
+        break;
+          
+          
+      // UNREGISTERED KEYPRESS
+      default:
+        // console.log('error in keydown 'game' event listener');
+        break;    
+    }
+  }
+  handleGun(key) {
+    switch(key) {
       case 'F':
         if (this.player.objectEquipped.fire()) {
           if (this.entityHandler.shootNearestEntity(this.glob, this.player.objectEquipped)) {
@@ -106,27 +135,12 @@ export default class KeyHandler {
           this.combatVisuals.eject();
         }
         break;
-      
-      ////// ESCAPE
-      case 'Escape':
-        this.toggle.gameState = 'mainMenu';
-        break;
         
-      case 'e':
-        this.toggle.gameState = 'inventory';
+      case 'R':
+        if (this.player.objectEquipped.reload()) {
+          this.combatVisuals.reload();
+        }
         break;
-          
-      ////// FREECAM
-      case '2':
-        this.toggle.freeCam = true;
-        this.FCglob.update(this.glob);
-        break;
-          
-          
-      // UNREGISTERED KEYPRESS
-      default:
-        // console.log('error in keydown 'game' event listener');
-        break;    
     }
   }
   handleMenuInput(key) {
