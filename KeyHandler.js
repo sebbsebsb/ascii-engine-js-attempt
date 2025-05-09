@@ -36,8 +36,7 @@ export default class KeyHandler {
   // i want to combine all the menus together
   
   handleKey(key) {
-    // this is the only place where tick is updated
-    this.toggle.update();
+    
     
     
     const gameState = this.toggle.gameState;
@@ -69,6 +68,8 @@ export default class KeyHandler {
     
     // update entities
     this.entityHandler.update();
+    // this is the only place where tick is updated
+    this.toggle.update();
     // next frame
     this.renderer.draw(this.toggle.gameState, coords);
   }
@@ -88,7 +89,7 @@ export default class KeyHandler {
   }
   handleGameInput(key) {
     this.handleBasics(key, this.glob, this.colMap);
-    if (this.player.objectEquipped) {
+    if (this.player.objectEquipped && !this.toggle.reloading) {
       this.handleGun(key);
     }
     switch (key) {
@@ -137,9 +138,7 @@ export default class KeyHandler {
         break;
         
       case 'R':
-        if (this.player.objectEquipped.reload()) {
-          this.combatVisuals.reload();
-        }
+        this.player.objectEquipped.reload();
         break;
     }
   }

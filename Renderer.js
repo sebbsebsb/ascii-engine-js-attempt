@@ -34,6 +34,8 @@ export default class Renderer {
   draw(gameState = this.toggle.gameState, coords = this.glob) {
     if(this.toggle.flash) {
       this.flash();
+    } else if(this.player.health < 1) {
+      this.deathScreen();
     } else {
       if (gameState === 'game') {
         this.drawGame(coords);
@@ -99,6 +101,22 @@ export default class Renderer {
       this.toggle.flash = false;
       this.draw(this.toggle.gameState, this.glob);
     }, 20); // flash for 150ms
+  }
+  deathScreen() {
+    let output = '';
+    output += this.topHUD();
+    let n = Math.floor(this.SIZE / 2);
+    
+    for (let j = 0; j < n; j++) { // y rows
+      
+      output += txt('YOU DIED RIP', ' ', this.SIZE);
+      
+    }
+    
+    
+    
+    output += this.bottomHUD(0);
+    document.getElementById('grid').textContent = output;
   }
   drawGame(coords) {
     let output = '';

@@ -19,9 +19,13 @@ export default class AudioManager {
     ];
     this.gunshotSounds9mm.forEach(sound => sound.volume = 0.5);
     
-    this.ejectSounds9mm = [
+    this.reloadSounds9mm = [
       new Audio('./Sounds/ejectSound9mm1.mp3'),
-      new Audio('./Sounds/ejectSound9mm2.mp3'),
+      new Audio('./Sounds/ejectSound9mm2.mp3')
+    ];
+    this.reloadSounds9mm.forEach(sound => sound.volume = 0.5);
+    
+    this.ejectSounds9mm = [
       new Audio('./Sounds/ejectSound9mm3.mp3'),
       new Audio('./Sounds/ejectSound9mm4.mp3'),
     ];
@@ -98,6 +102,17 @@ export default class AudioManager {
         break;
     }
   }
+  playReload(gunType) {
+    switch (gunType) {
+      case '9mm':
+        this.play9mmReload();
+        break;
+        
+      default:
+        console.warn('unknown gun type');
+        break;
+    }
+  }
   play9mmGunshot() {
     const index = getRand(0, this.gunshotSounds9mm.length - 1);
     const sound = this.gunshotSounds9mm[index];
@@ -105,13 +120,21 @@ export default class AudioManager {
     sound.play();
   }
   play9mmEject() {
-    const index = getRand(0, this.ejectSounds9mm.length - 1);
-    const sound = this.ejectSounds9mm[index];
-    sound.currentTime = 0;
-    sound.play();
+    this.ejectSounds9mm.forEach(sound => sound.currentTime = 0);
+    
+    this.ejectSounds9mm[0].play();
+    setTimeout(() => {
+      this.ejectSounds9mm[1].play();
+    }, 200); // 100ms flash
   }
   play9mmClick() {
     this.clickSound9mm.currentTime = 0;
     this.clickSound9mm.play();
+  }
+  play9mmReload() {
+    const index = getRand(0, this.reloadSounds9mm.length - 1);
+    const sound = this.reloadSounds9mm[index];
+    sound.currentTime = 0;
+    sound.play();
   }
 }

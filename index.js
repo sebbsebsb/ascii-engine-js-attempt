@@ -21,14 +21,14 @@ import CombatVisuals from "./CombatVisuals.js";
 
 //////////////////////////////////////////////////GLOBAL VARS ETC
 
-const SIZE = 29; // has to be odd
+const SIZE = 25; // has to be odd
 const WORLDMAPSIZE = 500; // this is only used for the populate() function
 
-const {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player} = initCore();
+const {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player, combatVisuals} = initCore();
 
 const entitiesArray = initEntities(); // array of entities
 
-const {mainMenu, invArr, inventory, builder, loader, combatVisuals} = initSecond();
+const {mainMenu, invArr, inventory, builder, loader} = initSecond();
 
 const {renderer, keyHandler, entityHandler} = initThird();
 
@@ -81,13 +81,14 @@ function initCore() {
   const colMap = new Map(); // collision mapppppppppppppppppp
   const audio =  new AudioManager(); // audio
   const effects = new Map(); // effects map
-  const toggle = new Toggles(effects); // toggles like freecam and debug mode
+  const combatVisuals = new CombatVisuals(glob, effects);
+  const toggle = new Toggles(effects, combatVisuals, audio); // toggles like freecam and debug mode
   const items = new Map(); // items map
   
   // Character object
   const player = new Player(153, null, 140);
   
-  return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player};
+  return {glob, FCglob, world, colMap, audio, storage, effects, toggle, items, player, combatVisuals};
 }
 
 function initSecond() {
@@ -105,12 +106,12 @@ function initSecond() {
   const loader = new MapLoader(builder);
 
 
-  const combatVisuals = new CombatVisuals(glob, effects);
   
   
   
   
-  return {mainMenu, invArr, inventory, builder, loader, combatVisuals};
+  
+  return {mainMenu, invArr, inventory, builder, loader};
 }
 
 function initEntities() {

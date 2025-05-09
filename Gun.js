@@ -15,7 +15,6 @@ export default class Gun extends InventoryItem{
     this.bulletInChamber = bulletInChamber;
     this.equipped = equipped;
     this.player = player;
-    this.reloading = false;
     this.reloadTime = reloadTime;
     
     if (this.equipped) this.player.equip(this);
@@ -121,18 +120,19 @@ export default class Gun extends InventoryItem{
   reload(mag = null) {
     if (mag) {
       this.mag = mag;
-      this.reloading = true;
-      
+      this.toggle.startReload(this.reloadTime, this.magType);
       return true;
     } else {
       if (!this.mag.bulletsLeft) {
           const validMags = this.getValidMags();
         if (validMags.length) {
           this.mag = validMags[0];
+          this.toggle.startReload(this.reloadTime, this.magType);
           return true;
         }
       }
     }
     return false;
   }
+  
 }

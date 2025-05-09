@@ -1,5 +1,5 @@
 export default class Toggles {
-  constructor(effects) {
+  constructor(effects, combatVisuals, audio) {
     this.tick = 0;
     this.gameState = 'game';
     this.debug = true;
@@ -9,6 +9,11 @@ export default class Toggles {
     this.currentMenu = null;
     this.flash = false;
     this.effects = effects;
+    this.combatVisuals = combatVisuals;
+    this.audio = audio;
+    
+    this.reloadTicksLeft = 0;
+    this.reloading = null;
   };
   
   toString() {
@@ -22,6 +27,12 @@ export default class Toggles {
   }
   
   update() {
+    //////////////////////////////TESTING IN HERE
+    // console.log(this.reloading);
+    
+    
+    
+    
     if (!this.pause) this.tick++;
     
     // updates and disappears visual effects
@@ -33,8 +44,26 @@ export default class Toggles {
       }
     }
     
+    // updates reload
+    if (this.reloading) {
+      this.reloadTicksLeft--;
+      if (!this.reloadTicksLeft) {
+        this.audio.playReload(this.reloading);
+        this.combatVisuals.reloadDone();
+        this.reloading = null;
+      }
+      this.combatVisuals.reload();
+    }
+    
     
     return this.tick;
   }
+  
+  startReload(reloadTime, magType) {
+    this.reloading = magType;
+    this.reloadTicksLeft = reloadTime;
+  }
+  
+  
   
 }

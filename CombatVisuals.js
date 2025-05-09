@@ -26,13 +26,13 @@ export default class CombatVisuals {
     return entityShot;
   }
   
+  
   reload() {
     // 'RELOAD' visual
-    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
-    
-    this.effects.set(vector.toString(), { text: 'RE', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'LO', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'AD', ticksRemaining: 2 });
+    this.printWordsOnScreen('RELOAD');
+  }
+  reloadDone() {
+    this.printWordsOnScreen('FINISHED');
   }
   
   
@@ -52,34 +52,16 @@ export default class CombatVisuals {
     }
   }
   bang() {
-    // 'BANG' visual
-    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
-    
-    this.effects.set(vector.toString(), { text: 'BA', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'NG', ticksRemaining: 2 });
+    this.printWordsOnScreen('BANG');
   }
   hit() {
-    // 'BANG' visual
-    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
-    
-    this.effects.set(vector.toString(), { text: 'HI', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'T!', ticksRemaining: 2 });
+    this.printWordsOnScreen('HIT');
   }
   click() {
-    // 'CLICK' visual
-    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
-    
-    this.effects.set(vector.toString(), { text: 'CL', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'IC', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'K ', ticksRemaining: 2 });
+    this.printWordsOnScreen('CLICK');
   }
   eject() {
-    // 'EJECT' visual
-    const vector = new Vector(this.glob.x + Math.ceil(Math.random() * 9) - 6, this.glob.y + Math.ceil(Math.random() * 9) - 5);
-    
-    this.effects.set(vector.toString(), { text: 'EJ', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'EC', ticksRemaining: 2 });
-    this.effects.set(vector.add(1,0).toString(), { text: 'T ', ticksRemaining: 2 });
+    this.printWordsOnScreen('CHAMBERED');
   }
 
   getRandomCircle(range, target = this.glob) {
@@ -113,5 +95,27 @@ export default class CombatVisuals {
     const lineVectors = this.glob.getLineVectors(entity.loc);
     const index = Math.floor(Math.random() * lineVectors.length);
     return lineVectors[index];
+  }
+  
+  printWordsOnScreen(string) {
+    const start = new Vector(
+      this.glob.x + Math.ceil(Math.random() * 9) - 7, 
+      this.glob.y + Math.ceil(Math.random() * 9) - 5
+    ); // choose a coord to start at
+    
+    
+    
+    for (let i = 0; i < string.length; i += 2) {
+      const chunk = string[i] + (string[i + 1] || ' '); // pair of 2 chars
+      
+      
+      const pos = start.add(1, 0) // move one tile right per chunk
+      
+      
+      this.effects.set(pos.toString(), {
+        text: chunk,
+        ticksRemaining: 2
+      });
+    }
   }
 }
